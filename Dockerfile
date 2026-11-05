@@ -48,6 +48,13 @@ RUN pip3 install --no-build-isolation ./tools/nlpnet-py3
 # stopwords: only used by the dev preprocessing scripts in text_metrics/scripts/.
 RUN python3 -m nltk.downloader punkt punkt_tab stopwords
 
+# Recent NLTK refuses to open model files outside its allowed data roots
+# (nltk/pathsec.py), which blocks the MaltParser model under tools/. NLTK_DATA
+# entries count as allowed roots, and the default data dirs are still searched.
+# Set after the download above so punkt stays in ~/nltk_data instead of under
+# /opt/text_metrics, which run*.sh bind-mount over at runtime.
+ENV NLTK_DATA=/opt/text_metrics/tools
+
 # TODO: replace deprecated `setup.py install` with `pip3 install --no-build-isolation ./tools/idd3`
 RUN cd tools/idd3 && python3 setup.py install
 
