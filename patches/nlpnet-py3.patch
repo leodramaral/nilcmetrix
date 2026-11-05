@@ -118,6 +118,17 @@
          
          self.transitions = None
          self.target_dist_lookup = None
+@@ -214,8 +214,8 @@
+         nn.transitions = transitions if transitions.shape != () else None
+         nn.padding_left = data['padding_left']
+         nn.padding_right = data['padding_right']
+-        nn.pre_padding = np.array((nn.word_window_size / 2) * [nn.padding_left])
+-        nn.pos_padding = np.array((nn.word_window_size / 2) * [nn.padding_right])
++        nn.pre_padding = np.array((nn.word_window_size // 2) * [nn.padding_left])
++        nn.pos_padding = np.array((nn.word_window_size // 2) * [nn.padding_right])
+         nn.feature_tables = list(data['feature_tables'])
+         nn.network_filename = filename
+         
 @@ -228,7 +228,7 @@
          It will load weights, biases, sizes, padding and 
          distance tables, and other feature tables.
@@ -172,6 +183,24 @@
          answer[-1] = path_scores[-1].argmax()
          self.answer_score = path_scores[-1][answer[-1]]
          previous_tag = path_backtrack[-1][answer[-1]]
+@@ -922,7 +922,7 @@
+         num_distances = self.target_dist_table.shape[0] + self.word_window_size - 1
+         self.target_dist_lookup = np.empty((num_distances, 
+                                             self.word_window_size * self.target_dist_table.shape[1]))
+-        self.target_dist_offset = num_distances / 2
++        self.target_dist_offset = num_distances // 2
+         window_from = 0
+         window_to = self.target_dist_table.shape[1] 
+         for i in range(self.word_window_size):
+@@ -951,7 +951,7 @@
+         num_distances = self.pred_dist_table.shape[0] + self.word_window_size - 1
+         self.pred_dist_lookup = np.empty((num_distances, 
+                                           self.word_window_size * self.pred_dist_table.shape[1]))
+-        self.pred_dist_offset = num_distances / 2
++        self.pred_dist_offset = num_distances // 2
+         window_from = 0
+         window_to = self.pred_dist_table.shape[1] 
+         for i in range(self.word_window_size):
 --- a/nlpnet/srl/srl_reader.py
 +++ b/nlpnet/srl/srl_reader.py
 @@ -403,7 +403,7 @@
